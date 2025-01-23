@@ -1,0 +1,4 @@
+package com.ms.stockservice.model;
+
+public class PaymentDTO {
+}

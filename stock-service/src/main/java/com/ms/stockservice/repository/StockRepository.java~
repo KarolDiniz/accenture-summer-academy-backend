@@ -1,0 +1,4 @@
+package com.ms.stockservice.repository;
+
+public interface StockRepository {
+}
