@@ -83,6 +83,13 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
+    @Transactional
+    public void deleteOrder(Long id) {
+        Order order = getOrder(id); // Reutilizando o método existente para buscar o pedido
+        orderRepository.delete(order);
+        log.info("Order with id {} has been deleted.", id);
+    }
+
 
     public List<OrderStatusHistory> getOrderStatusHistory(Long orderId) {
         Order order = getOrder(orderId);
