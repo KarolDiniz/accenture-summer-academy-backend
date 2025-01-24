@@ -28,4 +28,10 @@ public class OrderController {
     public ResponseEntity<Order> getOrder(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.getOrder(id));
     }
+
+    @PatchMapping("/{id}")
+    @Operation(summary = "Update an order status")
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
+    }
 }

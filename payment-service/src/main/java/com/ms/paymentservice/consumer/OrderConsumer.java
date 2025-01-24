@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class OrderConsumer {
+    
     private final PaymentService paymentService;
     private final Logger log = LoggerFactory.getLogger(OrderConsumer.class);
 

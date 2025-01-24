@@ -49,4 +49,12 @@ public class OrderService {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
     }
+
+    @Transactional
+    public Order updateOrderStatus(Long id, String status) {
+        Order order = getOrder(id);
+        order.setStatus(status);
+        return orderRepository.save(order);
+    }
+    
 }

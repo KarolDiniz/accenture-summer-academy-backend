@@ -15,12 +15,12 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue orderQueue() {
-        return new Queue("order.queue", true);
+        return new Queue("order.queue");
     }
 
     @Bean
     public Queue paymentQueue() {
-        return new Queue("payment.queue", true);
+        return new Queue("payment.queue");
     }
 
     @Bean

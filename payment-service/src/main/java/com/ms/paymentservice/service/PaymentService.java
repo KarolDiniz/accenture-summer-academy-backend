@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
+    
     private final RabbitTemplate rabbitTemplate;
 
     public void processPayment(OrderDTO order) {

@@ -5,13 +5,13 @@ spring:
   application:
     name: order-service
   rabbitmq:
-    host: rabbitmq.tericcabrel.com
-    port: 5672
-    username: admin
-    password: MyStrong-P4ssw0rd$
-    virtual-host: /
+    host: jackal.rmq.cloudamqp.com
+    port: 5671
+    username: mbmseyiz
+    password: jKz6Xz1a3SFnjO5HMVURWMvPCRSeZOZz
+    virtual-host: mbmseyiz
     ssl:
-      enabled: false
+      enabled: true
     listener:
       simple:
         retry:
