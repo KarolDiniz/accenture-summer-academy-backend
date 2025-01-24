@@ -79,6 +79,11 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+
     public List<OrderStatusHistory> getOrderStatusHistory(Long orderId) {
         Order order = getOrder(orderId);
         return orderStatusHistoryRepository.findByOrderOrderByChangeDateDesc(order);

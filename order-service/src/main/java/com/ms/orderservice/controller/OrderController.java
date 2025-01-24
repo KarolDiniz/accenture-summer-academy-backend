@@ -43,4 +43,11 @@ public class OrderController {
     public ResponseEntity<List<OrderStatusHistory>> getOrderStatusHistory(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.getOrderStatusHistory(id));
     }
+
+    @GetMapping
+    @Operation(summary = "Get all orders")
+    public ResponseEntity<List<Order>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
 }
