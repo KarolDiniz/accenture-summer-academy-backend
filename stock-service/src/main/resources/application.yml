@@ -4,7 +4,7 @@ server:
 spring:
   application:
     name: stock-service
-   rabbitmq:
+    rabbitmq:
     host: rabbitmq.tericcabrel.com
     port: 5672
     username: admin
