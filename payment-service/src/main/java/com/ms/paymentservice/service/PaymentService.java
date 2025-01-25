@@ -23,6 +23,7 @@ public class PaymentService {
     private final Logger log = LoggerFactory.getLogger(PaymentService.class);
     private final PaymentRepository paymentRepository;
     private final PaymentStrategyFactory paymentStrategyFactory;
+    private final ModelMapper modelMapper;
 
     public PaymentDTO processPayment(OrderDTO order) {
         
@@ -41,7 +42,7 @@ public class PaymentService {
         Payment savedPayment = paymentRepository.save(payment);
 
         // Mapear o objeto Payment para PaymentDTO
-        PaymentDTO paymentDTO = new ModelMapper().map(savedPayment, PaymentDTO.class);
+        PaymentDTO paymentDTO = modelMapper.map(savedPayment, PaymentDTO.class);
 
         // Enviar o evento de pagamento processado
         rabbitTemplate.convertAndSend(
@@ -54,4 +55,5 @@ public class PaymentService {
 
         return paymentDTO;
     }
+ 
 }

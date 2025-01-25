@@ -5,6 +5,7 @@ import com.ms.orderservice.model.Order;
 import com.ms.orderservice.model.OrderStatus;
 import com.ms.orderservice.model.OrderStatusHistory;
 import com.ms.orderservice.model.dto.OrderDTO;
+import com.ms.orderservice.model.dto.OrderItemDTO;
 import com.ms.orderservice.model.dto.OrderStatusHistoryDTO;
 import com.ms.orderservice.model.exception.InvalidStatusTransitionException;
 import com.ms.orderservice.repository.OrderRepository;
@@ -29,6 +30,7 @@ public class OrderService {
     private final OrderStatusHistoryRepository orderStatusHistoryRepository;
     private final RabbitTemplate rabbitTemplate;
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
+    private final ModelMapper modelMapper;
 
     // Método para criar o pedido e retornar o OrderDTO
     @Transactional
@@ -56,7 +58,7 @@ public class OrderService {
         }
 
         // Convertendo Order para OrderDTO e retornando
-        return new ModelMapper().map(savedOrder, OrderDTO.class);
+        return convertToDTO(savedOrder);
     }
 
     // Método para buscar um pedido pelo ID e retornar como OrderDTO
@@ -64,14 +66,15 @@ public class OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
 
-        return new ModelMapper().map(order, OrderDTO.class);
+        return convertToDTO(order);
     }
 
     // Método para atualizar o status do pedido e retornar o OrderDTO
     @Transactional
     public OrderDTO updateOrderStatus(Long id, String newStatus) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
         
-        Order order = new ModelMapper().map(getOrder(id), Order.class);
         OrderStatus requestedStatus = OrderStatus.fromString(newStatus);
         OrderStatus previousStatus = order.getStatus();
 
@@ -89,17 +92,38 @@ public class OrderService {
         orderRepository.save(order);
 
         // Retorna o DTO do pedido com o novo status
-        return new ModelMapper().map(order, OrderDTO.class);
+        return convertToDTO(order);
     }
 
     // Método para buscar o histórico de status do pedido
     public List<OrderStatusHistoryDTO> getOrderStatusHistory(Long orderId) {
-        Order order = new ModelMapper().map(getOrder(orderId), Order.class);
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+
         List<OrderStatusHistory> historyList = orderStatusHistoryRepository.findByOrderOrderByChangeDateDesc(order);
 
         // Convertendo para OrderStatusHistoryDTO e retornando
         return historyList.stream()
-                .map(history -> new ModelMapper().map(history, OrderStatusHistoryDTO.class))
+                .map(history -> modelMapper.map(history, OrderStatusHistoryDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    // Método auxiliar para converter Order para OrderDTO
+    private OrderDTO convertToDTO(Order order) {
+        OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
+        
+        // Mapeando os itens do pedido e o histórico de status
+        List<OrderItemDTO> itemDTOs = order.getItems().stream()
+                .map(item -> modelMapper.map(item, OrderItemDTO.class))
+                .collect(Collectors.toList());
+        
+        List<OrderStatusHistoryDTO> statusHistoryDTOs = order.getOrderStatusHistory().stream()
+                .map(history -> modelMapper.map(history, OrderStatusHistoryDTO.class))
+                .collect(Collectors.toList());
+
+        orderDTO.setItems(itemDTOs);
+        orderDTO.setOrderStatusHistory(statusHistoryDTOs);
+
+        return orderDTO;
     }
 }
