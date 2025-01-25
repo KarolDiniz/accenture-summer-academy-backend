@@ -39,6 +39,8 @@ public class Order implements Serializable {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    private String paymentMethod;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<OrderItem> items;
 

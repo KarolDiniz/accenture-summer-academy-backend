@@ -1,16 +1,18 @@
-package com.ms.orderservice.model;
+package com.ms.orderservice.model.dto;
 
 public class PaymentDTO {
 
     private Long orderId;
     private String status;
+    private String paymentMethod;
 
     public PaymentDTO() {
     }
 
-    public PaymentDTO(Long orderId, String status) {
+    public PaymentDTO(Long orderId, String status, String paymentMethod) {
         this.orderId = orderId;
         this.status = status;
+        this.paymentMethod = paymentMethod;
     }
 
     public Long getOrderId() {
@@ -28,5 +30,10 @@ public class PaymentDTO {
     public void setStatus(String status) {
         this.status = status;
     }
-    
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
 }

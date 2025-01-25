@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import com.ms.orderservice.model.PaymentDTO;
+import com.ms.orderservice.model.dto.PaymentDTO;
 import com.ms.orderservice.service.OrderService;
 
 import lombok.RequiredArgsConstructor;

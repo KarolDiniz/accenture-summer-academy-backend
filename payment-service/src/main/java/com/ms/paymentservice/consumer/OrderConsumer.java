@@ -23,7 +23,7 @@ public class OrderConsumer {
             log.info("Successfully processed order: {}", order);
         } catch (Exception e) {
             log.error("Error processing order: {}", e.getMessage(), e);
-            throw e; // Para rejeitar a mensagem e recolocá-la na fila
+            throw e; 
         }
     }
 }

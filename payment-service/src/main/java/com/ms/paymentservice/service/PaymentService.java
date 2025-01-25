@@ -1,6 +1,7 @@
 package com.ms.paymentservice.service;
 
 import com.ms.paymentservice.model.Payment;
+import com.ms.paymentservice.model.PaymentMethod;
 import com.ms.paymentservice.model.dto.OrderDTO;
 import com.ms.paymentservice.model.dto.PaymentDTO;
 
@@ -8,57 +9,49 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.ms.paymentservice.repository.PaymentRepository;
+import com.ms.paymentservice.service.impl.PaymentStrategyFactory;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
-import java.time.LocalDateTime;
-
 
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
 
-
     private final RabbitTemplate rabbitTemplate;
     private final Logger log = LoggerFactory.getLogger(PaymentService.class);
     private final PaymentRepository paymentRepository;
-    private final ModelMapper modelMapper;
+    private final PaymentStrategyFactory paymentStrategyFactory;
 
     public PaymentDTO processPayment(OrderDTO order) {
+        
+        log.info("Processing payment for the order: {}", order);
 
-        log.info("Processing payment for order: {}", order);
-        // Criar registro de pagamento
-        Payment payment = new Payment();
-        payment.setOrderId(order.getId());
-        payment.setCustomerEmail(order.getCustomerEmail());
-        payment.setAmount(order.getTotalAmount());
-        payment.setPaymentDate(LocalDateTime.now());
-        payment.setPaymentMethod("CREDIT_CARD"); // simular pagamento com cartão de crédito
+        // Obter o método de pagamento escolhido
+        PaymentMethod paymentMethod = PaymentMethod.valueOf(order.getPaymentMethod().toUpperCase());
 
-        // Simular processamento de pagamento
-        boolean paymentSuccess = simulatePaymentProcessing();
+        // Obter a estratégia correta
+        PaymentStrategy paymentStrategy = paymentStrategyFactory.getStrategy(paymentMethod);
 
-        // Atualizar status do pagamento
-        payment.setStatus(paymentSuccess ? "APPROVED" : "FAILED");
+        // Processar o pagamento usando a estratégia selecionada
+        Payment payment = paymentStrategy.processPayment(order);
 
-        // Salvar registro de pagamento
-        Payment savepayment = paymentRepository.save(payment);
+        // Salvar o pagamento no banco de dados
+        Payment savedPayment = paymentRepository.save(payment);
 
-        PaymentDTO paymentDTO = modelMapper.map(savepayment, PaymentDTO.class);
+        // Mapear o objeto Payment para PaymentDTO
+        PaymentDTO paymentDTO = new ModelMapper().map(savedPayment, PaymentDTO.class);
 
-        // Publicar evento de pagamento processado
+        // Enviar o evento de pagamento processado
         rabbitTemplate.convertAndSend(
                 "payment.exchange",
                 "payment.routingkey",
-                payment
+                savedPayment
         );
+
         log.info("Payment result sent successfully");
 
         return paymentDTO;
-    }
-
-    private boolean simulatePaymentProcessing() {
-        return Math.random() < 0.8;
     }
 }

@@ -1,8 +1,8 @@
 package com.ms.orderservice.controller;
 
-
 import com.ms.orderservice.model.Order;
-import com.ms.orderservice.model.OrderStatusHistory;
+import com.ms.orderservice.model.dto.OrderDTO;
+import com.ms.orderservice.model.dto.OrderStatusHistoryDTO;
 import com.ms.orderservice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,25 +22,25 @@ public class OrderController {
 
     @PostMapping
     @Operation(summary = "Create a new order")
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody Order order) {
         return ResponseEntity.ok(orderService.createOrder(order));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get an order by ID")
-    public ResponseEntity<Order> getOrder(@PathVariable Long id) {
+    public ResponseEntity<OrderDTO> getOrder(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.getOrder(id));
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Update an order status")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
+    public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
         return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
     }
 
     @GetMapping("/{id}/history")
     @Operation(summary = "Get order status history")
-    public ResponseEntity<List<OrderStatusHistory>> getOrderStatusHistory(@PathVariable Long id) {
+    public ResponseEntity<List<OrderStatusHistoryDTO>> getOrderStatusHistory(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.getOrderStatusHistory(id));
     }
 }

@@ -18,4 +18,5 @@ public class Payment {
     private LocalDateTime paymentDate;
     private String status;
     private String paymentMethod;
+    private String paymentLink;
 }
