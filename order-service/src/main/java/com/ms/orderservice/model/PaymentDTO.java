@@ -1,11 +1,7 @@
 package com.ms.orderservice.model;
 
-import lombok.Data;
-import lombok.ToString;
-
-@Data
-@ToString
 public class PaymentDTO {
+
     private Long orderId;
     private String status;
 
@@ -16,4 +12,21 @@ public class PaymentDTO {
         this.orderId = orderId;
         this.status = status;
     }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
 }

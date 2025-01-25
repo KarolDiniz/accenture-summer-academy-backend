@@ -1,6 +1,6 @@
 package com.ms.paymentservice.consumer;
 
-import com.ms.paymentservice.model.OrderDTO;
+import com.ms.paymentservice.model.dto.OrderDTO;
 import com.ms.paymentservice.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class OrderConsumer {
+    
     private final PaymentService paymentService;
     private final Logger log = LoggerFactory.getLogger(OrderConsumer.class);
 

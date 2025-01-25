@@ -1,6 +1,5 @@
 package com.ms.orderservice.service;
 
-
 import com.ms.orderservice.config.RabbitMQConfig;
 import com.ms.orderservice.model.Order;
 import com.ms.orderservice.model.OrderStatus;

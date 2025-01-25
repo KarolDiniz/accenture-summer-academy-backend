@@ -30,6 +30,7 @@ public class Order implements Serializable {
     private Long id;
 
     private String customerEmail;
+    
     private BigDecimal totalAmount;
 
     @CreatedDate
