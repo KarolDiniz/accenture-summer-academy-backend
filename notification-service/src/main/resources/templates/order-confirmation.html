@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Pedido</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        .order-details {
+            background-color: white;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Pedido Confirmado!</h1>
+</div>
+
+<div class="content">
+    <p>Olá, <span th:text="${customerName}">Cliente</span>!</p>
+
+    <p>Seu pedido foi confirmado com sucesso. Abaixo estão os detalhes:</p>
+
+    <div class="order-details">
+        <h2>Detalhes do Pedido #<span th:text="${orderId}">123</span></h2>
+        <p><strong>Status:</strong> <span class="status" th:text="${orderStatus}">Confirmado</span></p>
+        <p><strong>Data do Pedido:</strong> <span th:text="${#temporals.format(orderDate, 'dd/MM/yyyy HH:mm')}">01/01/2024</span></p>
+        <p><strong>Valor Total:</strong> <span th:text="${orderTotal}">R$ 100,00</span></p>
+    </div>
+
+    <div th:if="${items != null && !items.empty}">
+        <h3>Itens do Pedido:</h3>
+        <div class="order-details">
+            <div th:each="item : ${items}">
+                <p>
+                    <strong>Produto #</strong><span th:text="${item.productId}">123</span><br/>
+                    Quantidade: <span th:text="${item.quantity}">1</span><br/>
+                    Preço: <span th:text="${#numbers.formatCurrency(item.price)}">R$ 50,00</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <a th:href="${trackingUrl}" class="button">Acompanhar Pedido</a>
+
+    <p>Em caso de dúvidas, não hesite em nos contatar.</p>
+</div>
+
+<div class="footer">
+    <p>Este é um email automático, por favor não responda.</p>
+    <p>&copy; 2024 Sua Loja. Todos os direitos reservados.</p>
+</div>
+</body>
+</html>

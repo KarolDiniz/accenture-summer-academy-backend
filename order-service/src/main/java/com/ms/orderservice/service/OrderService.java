@@ -76,7 +76,23 @@ public class OrderService {
         orderStatusHistoryRepository.save(orderStatusHistory);
 
         order.setStatus(requestedStatus);
-        return orderRepository.save(order);
+        Order updatedOrder = orderRepository.save(order);
+
+        // Se o pedido foi confirmado, envia mensagem para notificação
+        if (requestedStatus == OrderStatus.CONFIRMED) {
+            try {
+                rabbitTemplate.convertAndSend(
+                        "order.exchange",
+                        "order.confirmed.notification",
+                        updatedOrder
+                );
+                log.info("Notification message sent for confirmed order: {}", order.getId());
+            } catch (Exception ex) {
+                log.error("Failed to send notification message: ", ex);
+            }
+        }
+
+        return updatedOrder;
     }
 
     public List<OrderStatusHistory> getOrderStatusHistory(Long orderId) {
