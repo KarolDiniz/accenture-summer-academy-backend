@@ -43,4 +43,19 @@ public class OrderController {
     public ResponseEntity<List<OrderStatusHistoryDTO>> getOrderStatusHistory(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.getOrderStatusHistory(id));
     }
+
+    @GetMapping
+    @Operation(summary = "Get all orders")
+    public ResponseEntity<List<Order>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete an order by ID")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
+        orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

@@ -95,6 +95,18 @@ public class OrderService {
         return convertToDTO(order);
     }
 
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    @Transactional
+    public void deleteOrder(Long id) {
+        Order order = getOrder(id); // Reutilizando o método existente para buscar o pedido
+        orderRepository.delete(order);
+        log.info("Order with id {} has been deleted.", id);
+    }
+
+
     // Método para buscar o histórico de status do pedido
     public List<OrderStatusHistoryDTO> getOrderStatusHistory(Long orderId) {
         Order order = orderRepository.findById(orderId)
