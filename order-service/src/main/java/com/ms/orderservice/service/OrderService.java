@@ -101,7 +101,8 @@ public class OrderService {
 
     @Transactional
     public void deleteOrder(Long id) {
-        Order order = getOrder(id); // Reutilizando o método existente para buscar o pedido
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
         orderRepository.delete(order);
         log.info("Order with id {} has been deleted.", id);
     }
@@ -121,7 +122,7 @@ public class OrderService {
     }
 
     // Método auxiliar para converter Order para OrderDTO
-    private OrderDTO convertToDTO(Order order) {
+private OrderDTO convertToDTO(Order order) {
         OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
         
         // Mapeando os itens do pedido e o histórico de status
@@ -132,10 +133,11 @@ public class OrderService {
         List<OrderStatusHistoryDTO> statusHistoryDTOs = order.getOrderStatusHistory().stream()
                 .map(history -> modelMapper.map(history, OrderStatusHistoryDTO.class))
                 .collect(Collectors.toList());
-
+    
         orderDTO.setItems(itemDTOs);
         orderDTO.setOrderStatusHistory(statusHistoryDTOs);
-
+    
         return orderDTO;
     }
+    
 }

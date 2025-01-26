@@ -5,6 +5,8 @@ import com.ms.paymentservice.model.PaymentMethod;
 import com.ms.paymentservice.model.dto.OrderDTO;
 import com.ms.paymentservice.model.dto.PaymentDTO;
 
+import java.math.BigDecimal;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +32,20 @@ public class PaymentService {
         log.info("Processing payment for the order: {}", order);
 
         // Obter o método de pagamento escolhido
-        PaymentMethod paymentMethod = PaymentMethod.valueOf(order.getPaymentMethod().toUpperCase());
+        if (order.getPaymentMethod() == null || order.getPaymentMethod().isEmpty()) {
+            throw new IllegalArgumentException("Payment method must not be null or empty");
+        }
+        PaymentMethod paymentMethod;
+        try {
+            paymentMethod = PaymentMethod.valueOf(order.getPaymentMethod().toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("No strategy found for payment method: " + order.getPaymentMethod(), ex);
+        }
+
+        // Check if the total amount is valid
+        if (order.getTotalAmount() == null || order.getTotalAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Payment amount must be greater than zero");
+        }
 
         // Obter a estratégia correta
         PaymentStrategy paymentStrategy = paymentStrategyFactory.getStrategy(paymentMethod);

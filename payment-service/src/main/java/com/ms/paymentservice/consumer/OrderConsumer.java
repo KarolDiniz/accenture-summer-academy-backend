@@ -17,6 +17,9 @@ public class OrderConsumer {
 
     @RabbitListener(queues = "order.queue")
     public void consumeOrder(OrderDTO order) {
+        if (order == null) {
+            throw new NullPointerException("Order cannot be null");
+        }
         try {
             log.info("Received order: {}", order);
             paymentService.processPayment(order);
