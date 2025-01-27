@@ -1,0 +1,82 @@
+package com.ms.orderservice.service.impl;
+
+import com.ms.orderservice.model.dto.OrderDTO;
+import com.ms.orderservice.model.entity.Order;
+import com.ms.orderservice.model.entity.OrderStatus;
+import com.ms.orderservice.model.exception.OrderNotFoundException;
+import com.ms.orderservice.repository.OrderRepository;
+import com.ms.orderservice.service.OrderMapper;
+import com.ms.orderservice.service.OrderService;
+import com.ms.orderservice.service.OrderStatusService;
+import com.ms.orderservice.service.RabbitMQService;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class OrderServiceImpl implements OrderService {
+
+    private final OrderRepository orderRepository;
+    private final OrderStatusService orderStatusService;
+    private final RabbitMQService rabbitMQService;
+    private final OrderMapper orderMapper;
+
+    @Override
+    @Transactional
+    public OrderDTO createOrder(Order order) {
+
+        order.setStatus(OrderStatus.PENDING);
+
+        Order savedOrder = orderRepository.save(order);
+
+        orderStatusService.validateAndCreateStatusHistory(savedOrder, OrderStatus.PENDING);
+
+        rabbitMQService.sendOrderToQueue(savedOrder);
+
+        return orderMapper.toDTO(savedOrder);
+    }
+
+    @Override
+    public OrderDTO getOrder(Long id) {
+        Order order = orderRepository.findById(id)
+            .orElseThrow(() -> new OrderNotFoundException(id));
+
+        return orderMapper.toDTO(order);
+    }
+
+    @Override
+    @Transactional
+    public OrderDTO updateOrderStatus(Long id, String newStatus) {
+        Order order = orderRepository.findById(id)
+            .orElseThrow(() -> new OrderNotFoundException(id));
+
+        OrderStatus requestedStatus = OrderStatus.fromString(newStatus);
+        
+        orderStatusService.validateAndCreateStatusHistory(order, requestedStatus);
+
+        order.setStatus(requestedStatus);
+
+        return orderMapper.toDTO(order);
+    }
+
+    @Override
+    public List<OrderDTO> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        return orders.stream()
+            .map(orderMapper::toDTO)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void deleteOrder(Long id) {
+        Order order = orderRepository.findById(id)
+            .orElseThrow(() -> new OrderNotFoundException(id));
+        orderRepository.delete(order);
+    }
+}
