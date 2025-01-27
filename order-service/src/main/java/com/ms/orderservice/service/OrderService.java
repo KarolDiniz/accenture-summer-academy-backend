@@ -1,21 +1,16 @@
 package com.ms.orderservice.service;
 
-import com.ms.orderservice.config.RabbitMQConfig;
 import com.ms.orderservice.model.Order;
 import com.ms.orderservice.model.OrderStatus;
 import com.ms.orderservice.model.OrderStatusHistory;
 import com.ms.orderservice.model.dto.OrderDTO;
 import com.ms.orderservice.model.dto.OrderItemDTO;
 import com.ms.orderservice.model.dto.OrderStatusHistoryDTO;
-import com.ms.orderservice.model.exception.InvalidStatusTransitionException;
+import com.ms.orderservice.model.exception.OrderNotFoundException;
 import com.ms.orderservice.repository.OrderRepository;
-import com.ms.orderservice.repository.OrderStatusHistoryRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +22,8 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderStatusHistoryRepository orderStatusHistoryRepository;
-    private final RabbitTemplate rabbitTemplate;
-    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
+    private final OrderStatusService orderStatusService;
+    private final RabbitMQService rabbitMQService;
     private final ModelMapper modelMapper;
 
     // Método para criar o pedido e retornar o OrderDTO
@@ -39,23 +33,10 @@ public class OrderService {
         Order savedOrder = orderRepository.save(order);
 
         // Registrar o status inicial
-        OrderStatusHistory initialStatus = new OrderStatusHistory(savedOrder, null, OrderStatus.PENDING);
-        orderStatusHistoryRepository.save(initialStatus);
+        orderStatusService.updateOrderStatus(savedOrder, OrderStatus.PENDING);
 
-        try {
-            rabbitTemplate.convertAndSend(
-                    RabbitMQConfig.ORDER_EXCHANGE,
-                    RabbitMQConfig.ORDER_ROUTING_KEY,
-                    savedOrder
-            );
-            log.info("Message sent to {} with routing key {}: {}",
-                    RabbitMQConfig.ORDER_EXCHANGE,
-                    RabbitMQConfig.ORDER_ROUTING_KEY,
-                    savedOrder);
-        } catch (Exception ex) {
-            log.error("Failed to send message: ", ex);
-            throw new RuntimeException("Failed to process order", ex);
-        }
+        // Enviar a mensagem para a fila
+        rabbitMQService.sendOrderToQueue(savedOrder);
 
         // Convertendo Order para OrderDTO e retornando
         return convertToDTO(savedOrder);
@@ -64,7 +45,7 @@ public class OrderService {
     // Método para buscar um pedido pelo ID e retornar como OrderDTO
     public OrderDTO getOrder(Long id) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+                .orElseThrow(() -> new OrderNotFoundException(id));
 
         return convertToDTO(order);
     }
@@ -73,25 +54,13 @@ public class OrderService {
     @Transactional
     public OrderDTO updateOrderStatus(Long id, String newStatus) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
-        
+                .orElseThrow(() -> new OrderNotFoundException(id));
+
         OrderStatus requestedStatus = OrderStatus.fromString(newStatus);
-        OrderStatus previousStatus = order.getStatus();
 
-        if (!order.getStatus().canTransitionTo(requestedStatus)) {
-            throw new InvalidStatusTransitionException(
-                    order.getStatus().toString(),
-                    requestedStatus.toString());
-        }
+        // Delegar para o OrderStatusService para atualizar o status
+        orderStatusService.updateOrderStatus(order, requestedStatus);
 
-        // Registrar a mudança de status
-        OrderStatusHistory orderStatusHistory = new OrderStatusHistory(order, previousStatus, requestedStatus);
-        orderStatusHistoryRepository.save(orderStatusHistory);
-
-        order.setStatus(requestedStatus);
-        orderRepository.save(order);
-
-        // Retorna o DTO do pedido com o novo status
         return convertToDTO(order);
     }
 
@@ -101,20 +70,18 @@ public class OrderService {
 
     @Transactional
     public void deleteOrder(Long id) {
-        Order order = orderRepository.findById(id).orElseThrow(); // Reutilizando o método existente para buscar o pedido
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException(id));
         orderRepository.delete(order);
-        log.info("Order with id {} has been deleted.", id);
     }
-
 
     // Método para buscar o histórico de status do pedido
     public List<OrderStatusHistoryDTO> getOrderStatusHistory(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
 
-        List<OrderStatusHistory> historyList = orderStatusHistoryRepository.findByOrderOrderByChangeDateDesc(order);
+        List<OrderStatusHistory> historyList = orderStatusService.getOrderStatusHistory(order);
 
-        // Convertendo para OrderStatusHistoryDTO e retornando
         return historyList.stream()
                 .map(history -> modelMapper.map(history, OrderStatusHistoryDTO.class))
                 .collect(Collectors.toList());

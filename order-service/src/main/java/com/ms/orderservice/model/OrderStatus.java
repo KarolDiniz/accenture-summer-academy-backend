@@ -37,12 +37,13 @@ public enum OrderStatus {
 
     public abstract boolean canTransitionTo(OrderStatus nextStatus);
 
+
+    // Implementa um padrão Factory Method com o método estático, que cria uma instância de OrderStatus a partir de uma string
     public static OrderStatus fromString(String status) {
 
         try {
             return valueOf(status.toUpperCase());
         } catch (IllegalArgumentException ex) {
-
             String validStates = Arrays.toString(OrderStatus.values());
             throw new IllegalArgumentException("Invalid order status: " + status + ". Valid states: " + validStates);
         }
