@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
 import com.ms.orderservice.model.dto.OrderDTO;
 import com.ms.orderservice.model.dto.OrderItemDTO;
@@ -12,6 +13,7 @@ import com.ms.orderservice.model.entity.Order;
 import com.ms.orderservice.model.entity.OrderItem;
 import com.ms.orderservice.model.entity.OrderStatusHistory;
 
+@Component
 public class OrderMapper {
     private final ModelMapper modelMapper;
 

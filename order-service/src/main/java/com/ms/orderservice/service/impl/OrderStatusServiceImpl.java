@@ -30,6 +30,10 @@ public class OrderStatusServiceImpl implements OrderStatusService {
     public void validateAndCreateStatusHistory(Order order, OrderStatus requestedStatus) {
         
         OrderStatus previousStatus = order.getStatus();
+        
+        if (previousStatus == requestedStatus) {
+            return; 
+        }
 
         if (!previousStatus.canTransitionTo(requestedStatus)) {
             throw new InvalidStatusTransitionException(previousStatus, requestedStatus);
