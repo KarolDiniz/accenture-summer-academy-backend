@@ -7,7 +7,8 @@ import java.time.LocalDateTime;
 public class StockOperationDTO {
     private Long id;
     private Long orderId;
-    private Long productId;
+    private String productSku;
+    private String productName;
     private Integer quantity;
     private String operationType;
     private LocalDateTime operationDate;

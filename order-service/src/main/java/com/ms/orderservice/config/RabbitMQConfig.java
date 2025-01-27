@@ -37,6 +37,19 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue notificationQueue() {
+        return new Queue("order.confirmed.queue", true);
+    }
+
+    @Bean
+    public Binding notificationBinding() {
+        return BindingBuilder
+                .bind(notificationQueue())
+                .to(orderExchange())
+                .with("order.confirmed.#");
+    }
+
+    @Bean
     public Binding binding() {
         return BindingBuilder
                 .bind(orderQueue())

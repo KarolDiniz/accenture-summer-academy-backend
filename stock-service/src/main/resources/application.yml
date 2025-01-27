@@ -1,6 +1,12 @@
 server:
   port: 8083
 
+<<<<<<< HEAD
+=======
+spring:
+  application:
+    name: stock-service
+>>>>>>> origin/feature/stock-validations
   rabbitmq:
     host: jackal.rmq.cloudamqp.com
     port: 5671

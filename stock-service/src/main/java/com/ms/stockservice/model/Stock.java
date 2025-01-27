@@ -10,10 +10,11 @@ public class Stock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long productId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
+
     private Integer quantity;
-    private String productName;
-    private String sku;
 
     @Version
     private Long version;

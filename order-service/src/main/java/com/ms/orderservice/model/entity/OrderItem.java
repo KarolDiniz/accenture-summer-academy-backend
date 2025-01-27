@@ -17,6 +17,7 @@ public class OrderItem implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long productId;
+    private String sku;
     private Integer quantity;
     private BigDecimal price;
 }

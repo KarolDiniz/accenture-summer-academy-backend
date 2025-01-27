@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @Embeddable
 public class Address {
+
     private String street;
     private String number;
     private String complement;
@@ -15,4 +16,5 @@ public class Address {
     private String state;
     private String country;
     private String zipCode;
+    
 }
