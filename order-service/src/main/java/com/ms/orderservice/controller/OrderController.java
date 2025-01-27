@@ -3,12 +3,15 @@ package com.ms.orderservice.controller;
 import com.ms.orderservice.model.Order;
 import com.ms.orderservice.model.dto.OrderDTO;
 import com.ms.orderservice.model.dto.OrderStatusHistoryDTO;
+import com.ms.orderservice.service.OrderMapper;
 import com.ms.orderservice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.ms.orderservice.service.OrderStatusService;
 
 import java.util.List;
 
@@ -19,11 +22,19 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderStatusService orderStatusService;
+    private final OrderMapper orderMapper;
 
     @PostMapping
     @Operation(summary = "Create a new order")
     public ResponseEntity<OrderDTO> createOrder(@RequestBody Order order) {
         return ResponseEntity.ok(orderService.createOrder(order));
+    }
+    
+    @PatchMapping("/{id}")
+    @Operation(summary = "Update an order status")
+    public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
     }
 
     @GetMapping("/{id}")
@@ -32,30 +43,25 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrder(id));
     }
 
-    @PatchMapping("/{id}")
-    @Operation(summary = "Update an order status")
-    public ResponseEntity<OrderDTO> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
-        return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
-    }
-
-    @GetMapping("/{id}/history")
-    @Operation(summary = "Get order status history")
-    public ResponseEntity<List<OrderStatusHistoryDTO>> getOrderStatusHistory(@PathVariable Long id) {
-        return ResponseEntity.ok(orderService.getOrderStatusHistory(id));
-    }
-
     @GetMapping
     @Operation(summary = "Get all orders")
-    public ResponseEntity<List<Order>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> ordersDTO = orderService.getAllOrders();
+        return ResponseEntity.ok(ordersDTO);
     }
-
+    
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an order by ID")
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }
-
-
+    
+    @GetMapping("/{id}/history")
+    @Operation(summary = "Get order status history")
+    public ResponseEntity<List<OrderStatusHistoryDTO>> getOrderStatusHistory(@PathVariable Long id) {
+        Order order = orderMapper.toEntity(orderService.getOrder(id));// Recuperando o pedido por ID, já que não faz sentido uma outra chamada para pegar o pedido.
+        List<OrderStatusHistoryDTO> history = orderStatusService.getOrderStatusHistory(order);
+        return ResponseEntity.ok(history);
+    }
 }
