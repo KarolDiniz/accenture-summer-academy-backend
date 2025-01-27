@@ -14,6 +14,7 @@ public class StockConsumer {
 
     @RabbitListener(queues = "stock.queue")
     public void consumeStockOperation(StockOperationDTO stockOperation) {
+        
         if ("SUCCESS".equals(stockOperation.getStatus()) &&
                 "CONFIRM".equals(stockOperation.getOperationType())) {
 

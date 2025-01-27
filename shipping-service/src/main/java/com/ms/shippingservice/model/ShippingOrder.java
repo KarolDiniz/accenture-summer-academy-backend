@@ -21,5 +21,6 @@ public class ShippingOrder {
     private Address deliveryAddress;
 
     private String carrierName;
+    
     private String shippingMethod;
 }

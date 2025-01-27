@@ -19,8 +19,9 @@ public class ShippingService {
     private final RabbitTemplate rabbitTemplate;
 
     public ShippingOrder createShippingOrder(ShippingOrder shippingOrder) {
+        
         shippingOrder.setCreatedAt(LocalDateTime.now());
-        shippingOrder.setStatus("PENDING");
+        // shippingOrder.setStatus("PENDING");
         shippingOrder.setTrackingCode(generateTrackingCode());
         shippingOrder.setEstimatedDeliveryDate(calculateEstimatedDeliveryDate());
 
