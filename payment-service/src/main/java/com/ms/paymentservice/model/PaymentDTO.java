@@ -2,12 +2,20 @@ package com.ms.paymentservice.model;
 
 import lombok.Data;
 import lombok.ToString;
+import java.util.List;
 
 @Data
 @ToString
 public class PaymentDTO {
     private Long orderId;
     private String status;
+    private List<OrderItemDTO> items;
+
+    @Data
+    public static class OrderItemDTO {
+        private String sku;
+        private Integer quantity;
+    }
 
     public PaymentDTO() {
     }

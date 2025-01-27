@@ -1,5 +1,7 @@
 package com.ms.orderservice.consumer;
 
+import com.ms.orderservice.model.Order;
+import com.ms.orderservice.model.OrderItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -9,6 +11,7 @@ import com.ms.orderservice.model.PaymentDTO;
 import com.ms.orderservice.service.OrderService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -18,6 +21,7 @@ public class PaymentConsumer {
     private final Logger log = LoggerFactory.getLogger(PaymentConsumer.class);
 
     @RabbitListener(queues = "payment.queue")
+    @Transactional
     public void consumePayment(PaymentDTO payment) {
         try {
             log.info("Received payment result: {}", payment);
@@ -30,6 +34,27 @@ public class PaymentConsumer {
             String newStatus = "APPROVED".equals(payment.getStatus()) ? "CONFIRMED" : "CANCELLED";
             log.info("Updating order {} to status {}", payment.getOrderId(), newStatus);
 
+            // O método getOrder agora será executado dentro de uma transação
+            Order order = orderService.getOrder(payment.getOrderId());
+
+            // Se o pagamento foi aprovado, precisamos reservar o estoque para cada item
+            if ("APPROVED".equals(payment.getStatus())) {
+                log.info("Payment approved. Processing stock operations for order {}", payment.getOrderId());
+
+                try {
+                    // Agora podemos acessar os items com segurança
+                    if (order.getItems() != null) {
+                        for (OrderItem item : order.getItems()) {
+                            log.info("Processing stock reservation for SKU {} quantity {}",
+                                    item.getSku(), item.getQuantity());
+                        }
+                    }
+                } catch (Exception e) {
+                    log.error("Error processing stock operations: {}", e.getMessage(), e);
+                    newStatus = "CANCELLED";
+                }
+            }
+
             orderService.updateOrderStatus(payment.getOrderId(), newStatus);
             log.info("Successfully updated order {} to status {}", payment.getOrderId(), newStatus);
 
@@ -38,5 +63,4 @@ public class PaymentConsumer {
             throw e;
         }
     }
-    
 }

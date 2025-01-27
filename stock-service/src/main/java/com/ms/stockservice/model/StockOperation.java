@@ -11,7 +11,10 @@ public class StockOperation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
     private Long orderId;
     private Integer quantity;
     private String operationType; // RESERVE, CONFIRM, CANCEL

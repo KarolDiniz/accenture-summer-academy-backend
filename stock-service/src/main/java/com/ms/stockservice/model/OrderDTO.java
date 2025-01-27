@@ -1,28 +1,24 @@
 package com.ms.stockservice.model;
 
 import lombok.Data;
-import lombok.ToString;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@ToString
-public class PaymentDTO {
+public class OrderDTO {
     private Long id;
-    private Long orderId;
+    private String customerEmail;
+    private BigDecimal totalAmount;
+    private LocalDateTime createdAt;
     private String status;
     private List<OrderItemDTO> items;
 
     @Data
     public static class OrderItemDTO {
+        private Long id;
         private String sku;
         private Integer quantity;
-    }
-
-    public PaymentDTO() {
-    }
-
-    public PaymentDTO(Long orderId, String status) {
-        this.orderId = orderId;
-        this.status = status;
+        private BigDecimal price;
     }
 }

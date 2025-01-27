@@ -5,6 +5,8 @@ import com.ms.orderservice.config.RabbitMQConfig;
 import com.ms.orderservice.model.Order;
 import com.ms.orderservice.model.OrderStatus;
 import com.ms.orderservice.model.OrderStatusHistory;
+import com.ms.orderservice.model.StockCheckDTO;
+import com.ms.orderservice.model.exception.InsufficientStockException;
 import com.ms.orderservice.model.exception.InvalidStatusTransitionException;
 import com.ms.orderservice.repository.OrderRepository;
 import com.ms.orderservice.repository.OrderStatusHistoryRepository;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +27,36 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderStatusHistoryRepository orderStatusHistoryRepository;
     private final RabbitTemplate rabbitTemplate;
+    private final StockServiceClient stockServiceClient;
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
 
     @Transactional
     public Order createOrder(Order order) {
+
+        // verificar disponibilidade de estoque
+        List<StockCheckDTO> stockChecks = order.getItems().stream()
+                        .map(item -> new StockCheckDTO(
+                                item.getSku(),
+                                item.getQuantity(),
+                                false))
+                        .toList();
+
+        log.info("Checking stock availability for order items: {}", stockChecks);
+
+        List<StockCheckDTO> stockResults = stockServiceClient.checkAvailability(stockChecks);
+
+        // verificar se todos os itens estão disponíveis
+        List<String> unavailableSkus = stockResults.stream()
+                        .filter(result -> !result.isAvailable())
+                                .map(StockCheckDTO::getSku)
+                                .toList();
+
+        if (!unavailableSkus.isEmpty()) {
+            log.warn("Insufficient stock for items: {}", unavailableSkus);
+            throw new InsufficientStockException(unavailableSkus);
+        }
+
         order.setStatus(OrderStatus.PENDING);
         Order savedOrder = orderRepository.save(order);
 
@@ -54,6 +82,7 @@ public class OrderService {
         return savedOrder;
     }
 
+    @Transactional(readOnly = true)
     public Order getOrder(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));

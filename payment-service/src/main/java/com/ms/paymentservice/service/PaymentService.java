@@ -9,6 +9,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -20,6 +21,7 @@ public class PaymentService {
 
     public void processPayment(OrderDTO order) {
         log.info("Processing payment for order: {}", order);
+
         // Criar registro de pagamento
         Payment payment = new Payment();
         payment.setOrderId(order.getId());
@@ -38,6 +40,20 @@ public class PaymentService {
         PaymentDTO paymentDTO = new PaymentDTO();
         paymentDTO.setOrderId(payment.getOrderId());
         paymentDTO.setStatus(payment.getStatus());
+
+        // Adicionar os itens do pedido no PaymentDTO
+        if (order.getItems() != null) {
+            paymentDTO.setItems(
+                    order.getItems().stream()
+                            .map(item -> {
+                                PaymentDTO.OrderItemDTO itemDTO = new PaymentDTO.OrderItemDTO();
+                                itemDTO.setSku(item.getSku());
+                                itemDTO.setQuantity(item.getQuantity());
+                                return itemDTO;
+                            })
+                            .collect(Collectors.toList())
+            );
+        }
 
         log.info("Sending payment result: {}", paymentDTO);
         // Publicar evento de pagamento processado
