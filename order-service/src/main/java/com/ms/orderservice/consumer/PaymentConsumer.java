@@ -6,6 +6,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import com.ms.orderservice.model.dto.PaymentDTO;
+import com.ms.orderservice.model.exception.MessageSendFailedException;
 import com.ms.orderservice.service.OrderService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class PaymentConsumer {
             orderService.updateOrderStatus(payment.getOrderId(), newStatus);
             log.info("Successfully updated order {} to status {}", payment.getOrderId(), newStatus);
 
-        } catch (Exception e) {
+        } catch (MessageSendFailedException e) {
             log.error("Error processing payment result: {}", e.getMessage(), e);
             throw e;
         }
