@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.ms.orderservice.config.RabbitMQConfig;
 import com.ms.orderservice.model.entity.Order;
+import com.ms.orderservice.model.exception.MessageSendFailedException;
+import com.ms.orderservice.model.exception.OrderNotFoundException;
+
+import io.swagger.v3.oas.annotations.Operation;
 
 @Service
 public class RabbitMQService {
@@ -18,9 +22,15 @@ public class RabbitMQService {
         this.rabbitTemplate = rabbitTemplate;
     }
 
+    @Operation(
+        summary = "Sends a request to the RabbitMQ queue"
+    )
     public void sendOrderToQueue(Order order) {
-        
         try {
+            if (order == null || order.getId() == null) {
+                throw new OrderNotFoundException("Order or order ID is invalid");
+            }
+
             // Enviando a mensagem para a fila
             rabbitTemplate.convertAndSend(RabbitMQConfig.ORDER_EXCHANGE,
                     RabbitMQConfig.ORDER_ROUTING_KEY, order);
@@ -30,16 +40,21 @@ public class RabbitMQService {
                      RabbitMQConfig.ORDER_EXCHANGE, 
                      RabbitMQConfig.ORDER_ROUTING_KEY, 
                      order);
+        } catch (OrderNotFoundException ex) {
+            log.error("Invalid message format: {}", ex.getMessage());
+            throw ex; // Re-lança a exceção, se necessário
         } catch (Exception ex) {
-            // Log de erro caso o envio falhe
             log.error("Failed to send message to {} with routing key {}: {}",
                       RabbitMQConfig.ORDER_EXCHANGE, 
                       RabbitMQConfig.ORDER_ROUTING_KEY, 
                       order, ex);
 
-            throw new RuntimeException("Failed to process order", ex);
+            throw new MessageSendFailedException("Failed to send order message to RabbitMQ", ex);
         }
     }
 }
+
+
+
 
 

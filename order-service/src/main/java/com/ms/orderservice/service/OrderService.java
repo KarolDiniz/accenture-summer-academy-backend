@@ -6,7 +6,6 @@ import com.ms.orderservice.model.entity.OrderStatus;
 import com.ms.orderservice.model.exception.OrderNotFoundException;
 import com.ms.orderservice.repository.OrderRepository;
 
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
