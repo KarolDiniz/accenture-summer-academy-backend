@@ -101,7 +101,7 @@ public class OrderService {
 
     @Transactional
     public void deleteOrder(Long id) {
-        Order order = getOrder(id); // Reutilizando o método existente para buscar o pedido
+        Order order = orderRepository.findById(id).orElseThrow(); // Reutilizando o método existente para buscar o pedido
         orderRepository.delete(order);
         log.info("Order with id {} has been deleted.", id);
     }
