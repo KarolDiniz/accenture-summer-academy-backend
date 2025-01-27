@@ -1,4 +1,4 @@
-package com.ms.orderservice.model;
+package com.ms.orderservice.model.entity;
 
 
 import jakarta.persistence.*;

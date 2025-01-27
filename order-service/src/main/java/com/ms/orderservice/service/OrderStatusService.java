@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import com.ms.orderservice.model.Order;
-import com.ms.orderservice.model.OrderStatus;
-import com.ms.orderservice.model.OrderStatusHistory;
 import com.ms.orderservice.model.dto.OrderStatusHistoryDTO;
+import com.ms.orderservice.model.entity.Order;
+import com.ms.orderservice.model.entity.OrderStatus;
+import com.ms.orderservice.model.entity.OrderStatusHistory;
 import com.ms.orderservice.model.exception.InvalidStatusTransitionException;
 import com.ms.orderservice.repository.OrderStatusHistoryRepository;
 

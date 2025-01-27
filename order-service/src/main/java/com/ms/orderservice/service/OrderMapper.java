@@ -5,12 +5,12 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 
-import com.ms.orderservice.model.Order;
-import com.ms.orderservice.model.OrderItem;
-import com.ms.orderservice.model.OrderStatusHistory;
 import com.ms.orderservice.model.dto.OrderDTO;
 import com.ms.orderservice.model.dto.OrderItemDTO;
 import com.ms.orderservice.model.dto.OrderStatusHistoryDTO;
+import com.ms.orderservice.model.entity.Order;
+import com.ms.orderservice.model.entity.OrderItem;
+import com.ms.orderservice.model.entity.OrderStatusHistory;
 
 public class OrderMapper {
     private final ModelMapper modelMapper;

@@ -1,10 +1,12 @@
 package com.ms.orderservice.service;
 
-import com.ms.orderservice.model.Order;
-import com.ms.orderservice.model.OrderStatus;
 import com.ms.orderservice.model.dto.OrderDTO;
+import com.ms.orderservice.model.entity.Order;
+import com.ms.orderservice.model.entity.OrderStatus;
 import com.ms.orderservice.model.exception.OrderNotFoundException;
 import com.ms.orderservice.repository.OrderRepository;
+
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +30,6 @@ public class OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
-        // Registra a transição de status no histórico
         orderStatusService.validateAndCreateStatusHistory(savedOrder, OrderStatus.PENDING);
 
         rabbitMQService.sendOrderToQueue(savedOrder);

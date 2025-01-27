@@ -1,12 +1,12 @@
 package com.ms.orderservice.model.dto;
 
-import com.ms.orderservice.model.OrderStatus;
-
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.ms.orderservice.model.entity.OrderStatus;
 
 @Data
 public class OrderDTO {

@@ -6,7 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import com.ms.orderservice.config.RabbitMQConfig;
-import com.ms.orderservice.model.Order;
+import com.ms.orderservice.model.entity.Order;
 
 @Service
 public class RabbitMQService {

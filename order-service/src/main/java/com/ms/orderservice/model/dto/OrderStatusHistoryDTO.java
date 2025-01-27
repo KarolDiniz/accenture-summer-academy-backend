@@ -1,9 +1,10 @@
 package com.ms.orderservice.model.dto;
 
-import com.ms.orderservice.model.OrderStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+
+import com.ms.orderservice.model.entity.OrderStatus;
 
 @Data
 public class OrderStatusHistoryDTO {

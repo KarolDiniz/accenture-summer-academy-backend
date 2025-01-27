@@ -1,8 +1,8 @@
 package com.ms.orderservice.controller;
 
-import com.ms.orderservice.model.Order;
 import com.ms.orderservice.model.dto.OrderDTO;
 import com.ms.orderservice.model.dto.OrderStatusHistoryDTO;
+import com.ms.orderservice.model.entity.Order;
 import com.ms.orderservice.service.OrderMapper;
 import com.ms.orderservice.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,11 +56,11 @@ public class OrderController {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }
-    
+
     @GetMapping("/{id}/history")
     @Operation(summary = "Get order status history")
     public ResponseEntity<List<OrderStatusHistoryDTO>> getOrderStatusHistory(@PathVariable Long id) {
-        Order order = orderMapper.toEntity(orderService.getOrder(id));// Recuperando o pedido por ID, já que não faz sentido uma outra chamada para pegar o pedido.
+        Order order = orderMapper.toEntity(orderService.getOrder(id));
         List<OrderStatusHistoryDTO> history = orderStatusService.getOrderStatusHistory(order);
         return ResponseEntity.ok(history);
     }

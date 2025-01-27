@@ -1,6 +1,6 @@
 package com.ms.orderservice.model.exception;
 
-import com.ms.orderservice.model.OrderStatus;
+import com.ms.orderservice.model.entity.OrderStatus;
 
 public class InvalidStatusTransitionException extends RuntimeException {
     
