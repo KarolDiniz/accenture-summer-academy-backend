@@ -1,4 +1,4 @@
-package com.ms.paymentservice.model;
+package com.ms.paymentservice.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

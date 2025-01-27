@@ -1,4 +1,4 @@
-package com.ms.paymentservice.model;
+package com.ms.paymentservice.model.entity;
 
 import java.util.Arrays;
 
@@ -30,13 +30,8 @@ public enum PaymentMethod {
         public boolean canBeProcessed() {
             return false; // Boleto não pode ser processado imediatamente
         }
-    },
-    PAYPAL {
-        @Override
-        public boolean canBeProcessed() {
-            return true; // PayPal processado imediatamente
-        }
     };
+
 
     // Método que define se o pagamento pode ser processado imediatamente
     public abstract boolean canBeProcessed();

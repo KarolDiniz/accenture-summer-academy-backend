@@ -1,7 +1,6 @@
-package com.ms.paymentservice.service.impl;
+package com.ms.paymentservice.service;
 
-import com.ms.paymentservice.model.PaymentMethod;
-import com.ms.paymentservice.service.PaymentStrategy;
+import com.ms.paymentservice.model.entity.PaymentMethod;
 
 import org.springframework.stereotype.Component;
 
@@ -17,6 +16,7 @@ public class PaymentStrategyFactory {
     }
 
     public PaymentStrategy getStrategy(PaymentMethod paymentMethod) {
+        
         if (!strategies.containsKey(paymentMethod)) {
             throw new IllegalArgumentException("No strategy found for payment method: " + paymentMethod);
         }
