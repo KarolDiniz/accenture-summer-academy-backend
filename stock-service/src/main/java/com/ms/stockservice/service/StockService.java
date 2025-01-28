@@ -1,9 +1,9 @@
 package com.ms.stockservice.service;
 
-import com.ms.stockservice.model.Stock;
-import com.ms.stockservice.model.StockCheckDTO;
-import com.ms.stockservice.model.StockOperation;
-import com.ms.stockservice.model.StockOperationDTO;
+import com.ms.stockservice.model.entity.Stock;
+import com.ms.stockservice.model.dto.StockCheckDTO;
+import com.ms.stockservice.model.entity.StockOperation;
+import com.ms.stockservice.model.dto.StockOperationDTO;
 import com.ms.stockservice.repository.StockOperationRepository;
 import com.ms.stockservice.repository.StockRepository;
 import org.slf4j.Logger;

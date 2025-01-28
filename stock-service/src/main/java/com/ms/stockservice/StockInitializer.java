@@ -1,11 +1,5 @@
 package com.ms.stockservice;
 
-import com.ms.stockservice.model.Stock;
-import com.ms.stockservice.service.StockService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-
 // @Component
 // @RequiredArgsConstructor
 // public class StockInitializer implements CommandLineRunner {

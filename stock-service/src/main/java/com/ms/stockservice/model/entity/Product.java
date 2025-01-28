@@ -1,4 +1,4 @@
-package com.ms.stockservice.model;
+package com.ms.stockservice.model.entity;
 
 
 import jakarta.persistence.*;

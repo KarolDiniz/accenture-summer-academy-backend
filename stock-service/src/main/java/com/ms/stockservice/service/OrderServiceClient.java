@@ -1,6 +1,6 @@
 package com.ms.stockservice.service;
 
-import com.ms.stockservice.model.OrderDTO;
+import com.ms.stockservice.model.dto.OrderDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

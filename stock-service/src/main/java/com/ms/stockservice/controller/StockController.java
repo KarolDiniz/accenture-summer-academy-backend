@@ -1,7 +1,7 @@
 package com.ms.stockservice.controller;
 
-import com.ms.stockservice.model.Stock;
-import com.ms.stockservice.model.StockCheckDTO;
+import com.ms.stockservice.model.entity.Stock;
+import com.ms.stockservice.model.dto.StockCheckDTO;
 import com.ms.stockservice.service.StockService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

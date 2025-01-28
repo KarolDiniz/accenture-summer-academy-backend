@@ -1,6 +1,7 @@
-package com.ms.stockservice.model;
+package com.ms.stockservice.model.dto;
 
 
+import com.ms.stockservice.model.entity.StockOperation;
 import lombok.Builder;
 import lombok.Data;
 

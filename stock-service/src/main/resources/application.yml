@@ -23,15 +23,14 @@ spring:
     publisher-returns: true
 
   datasource:
-    url: jdbc:mysql://localhost:3306/paymentdb # Substitua pelo nome do seu banco de dados
+    url: jdbc:mysql://localhost:3306/stockdb
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root # Substitua pelo usuário do MySQL
-    password: '' # Substitua pela senha do MySQL
+    username: root
+    password: root
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: update # Use 'update' apenas para desenvolvimento
+      ddl-auto: update
     show-sql: true
 
 eureka:
