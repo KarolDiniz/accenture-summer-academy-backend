@@ -10,6 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 @EnableFeignClients
 public class StockServiceApplication {
+    
     public static void main(String[] args) {
         SpringApplication.run(StockServiceApplication.class, args);
     }

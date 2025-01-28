@@ -2,10 +2,12 @@ package com.ms.paymentservice.service.impl.paymentMethod;
 
 import java.time.LocalDateTime;
 
+import org.springframework.stereotype.Component;
+
 import com.ms.paymentservice.model.dto.OrderDTO;
 import com.ms.paymentservice.model.entity.Payment;
 import com.ms.paymentservice.service.PaymentStrategy;
-
+@Component
 public class PixPaymentStrategy implements PaymentStrategy {
 
     @Override
