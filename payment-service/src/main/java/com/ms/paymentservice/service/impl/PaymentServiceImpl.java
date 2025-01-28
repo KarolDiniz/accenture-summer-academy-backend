@@ -10,12 +10,14 @@ import com.ms.paymentservice.repository.PaymentRepository;
 import com.ms.paymentservice.service.PaymentService;
 import com.ms.paymentservice.service.PaymentStrategy;
 import com.ms.paymentservice.service.PaymentStrategyFactory;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -29,45 +31,51 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentDTO executePaymentProcessing(OrderDTO order) throws PaymentProcessingException {
-        
         log.info("Processing payment for the order: {}", order);
 
-        try {
-
-            if (order == null || order.getPaymentMethod() == null) {
-                log.error("Invalid order data: {}", order);
-                throw new PaymentProcessingException("Invalid order data");
-            }
-
-            PaymentMethod paymentMethod;
-
-            try {
-                paymentMethod = PaymentMethod.valueOf(order.getPaymentMethod().toUpperCase());
-            } catch (IllegalArgumentException e) {
-                log.error("Invalid payment method: {}", order.getPaymentMethod());
-                throw new InvalidPaymentMethodException("Invalid payment method: " + order.getPaymentMethod(), e);
-            }
-
-            // Obter a estratégia correta
-            PaymentStrategy paymentStrategy = paymentStrategyFactory.getStrategy(paymentMethod);
-
-            // Processar o pagamento usando a estratégia selecionada
-            Payment payment = paymentStrategy.processPayment(order);
-
-            Payment savedPayment = paymentRepository.save(payment);
-
-            PaymentDTO paymentDTO = modelMapper.map(savedPayment, PaymentDTO.class);
-
-            // Enviar o evento de pagamento processado
-            rabbitTemplate.convertAndSend("payment.exchange", "payment.routingkey", savedPayment);
-
-            log.info("Payment result sent successfully");
-
-            return paymentDTO;
-
-        } catch (PaymentProcessingException e) {
-            log.error("Error during payment processing: {}", e.getMessage());
-            throw e; 
+        if (order == null || order.getPaymentMethod() == null) {
+            log.error("Invalid order data: {}", order);
+            throw new PaymentProcessingException("Invalid order data");
         }
+
+        PaymentMethod paymentMethod;
+        
+        try {
+            paymentMethod = PaymentMethod.fromString(order.getPaymentMethod().toString());
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid payment method: {}", order.getPaymentMethod());
+            throw new InvalidPaymentMethodException("Invalid payment method: " + order.getPaymentMethod(), e);
+        }
+
+        // Obter a estratégia correta
+        PaymentStrategy paymentStrategy = paymentStrategyFactory.getStrategy(paymentMethod);
+
+        // Processar o pagamento usando a estratégia selecionada
+        Payment payment = paymentStrategy.processPayment(order);
+
+        // Simular processamento para métodos que não precisam de terceiros
+        if (payment.getStatus() == null) {
+            payment.setStatus(simulatePaymentProcessing() ? "APPROVED" : "FAILED");
+        }
+
+        // Salvar pagamento no repositório
+        Payment savedPayment = paymentRepository.save(payment);
+
+        // Criar DTO de resposta
+        PaymentDTO paymentDTO = modelMapper.map(savedPayment, PaymentDTO.class);
+
+        // Publicar evento de pagamento processado
+        rabbitTemplate.convertAndSend(
+                "payment.exchange",
+                "payment.routingkey",
+                paymentDTO
+        );
+        log.info("Payment result sent successfully");
+
+        return paymentDTO;
+    }
+
+    private boolean simulatePaymentProcessing() {
+        return Math.random() < 0.8;
     }
 }

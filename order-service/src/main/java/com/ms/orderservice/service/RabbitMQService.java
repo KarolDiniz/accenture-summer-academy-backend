@@ -52,6 +52,21 @@ public class RabbitMQService {
             throw new MessageSendFailedException("Failed to send order message to RabbitMQ", ex);
         }
     }
+    
+    public void sendOrderConfirmedNotification(Order order) {
+        try {
+            rabbitTemplate.convertAndSend(
+                    RabbitMQConfig.ORDER_EXCHANGE,
+                    "order.confirmed.notification",
+                    order
+            );
+            log.info("Order confirmation notification sent for order ID: {}", order.getId());
+        } catch (Exception ex) {
+            log.error("Failed to send order confirmation notification: {}", ex.getMessage());
+            throw new RuntimeException("Failed to send order confirmation notification to RabbitMQ", ex);
+        }
+}
+
 }
 
 

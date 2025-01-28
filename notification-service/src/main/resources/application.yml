@@ -1,0 +1,49 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: notification-service
+
+  rabbitmq:
+    host: jackal.rmq.cloudamqp.com
+    port: 5671
+    username: mbmseyiz
+    password: jKz6Xz1a3SFnjO5HMVURWMvPCRSeZOZz
+    virtual-host: mbmseyiz
+    ssl:
+      enabled: true
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 2s
+          max-attempts: 3
+    publisher-confirm-type: correlated
+    publisher-returns: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: myseriespoo@gmail.com
+    password: eaxv gnrp lcpr ohft
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+app:
+  tracking-url-base: http://localhost:8080/orders/track/

@@ -1,6 +1,9 @@
 server:
   port: 8083
 
+spring:
+  application:
+    name: stock-service
   rabbitmq:
     host: jackal.rmq.cloudamqp.com
     port: 5671
@@ -35,8 +38,6 @@ server:
     console:
       enabled: true
       path: /h2-console
-
-
 
 eureka:
   client:

@@ -2,7 +2,8 @@ package com.ms.paymentservice.model.dto;
 
 import lombok.Data;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+
+import com.ms.paymentservice.model.entity.PaymentMethod;
 
 @Data
 public class OrderDTO {
@@ -10,8 +11,7 @@ public class OrderDTO {
     private Long id;
     private String customerEmail;
     private BigDecimal totalAmount;
-    private LocalDateTime createdAt;
-    private String status;
-    private String paymentMethod;
+    private PaymentMethod paymentMethod;
+    
     
 }
