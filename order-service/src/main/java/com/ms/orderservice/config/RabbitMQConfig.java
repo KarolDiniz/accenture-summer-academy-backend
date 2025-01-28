@@ -25,16 +25,17 @@ public class RabbitMQConfig {
     public Queue orderQueue() {
         return new Queue(ORDER_QUEUE);
     }
-    @Bean
-    public Queue paymentQueue() {
-        return new Queue("payment.queue", true); // true indica que a fila é durável
-    }
 
+    @Bean
+    public Queue paymentOrderQueue() {
+        return new Queue("payment.order.queue", true);
+    }
 
     @Bean
     public TopicExchange orderExchange() {
         return new TopicExchange(ORDER_EXCHANGE);
     }
+
 
     @Bean
     public Queue notificationQueue() {
