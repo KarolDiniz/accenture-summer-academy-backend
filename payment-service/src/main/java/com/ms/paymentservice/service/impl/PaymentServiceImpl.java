@@ -11,6 +11,7 @@ import com.ms.paymentservice.service.PaymentService;
 import com.ms.paymentservice.service.PaymentStrategy;
 import com.ms.paymentservice.service.PaymentStrategyFactory;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.query.Order;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +67,13 @@ public class PaymentServiceImpl implements PaymentService {
         // Criar DTO de resposta
         PaymentDTO paymentDTO = modelMapper.map(savedPayment, PaymentDTO.class);
 
+        if (order.getItems() != null && !order.getItems().isEmpty()) {
+
+            List<PaymentDTO.OrderItemDTO> items = mapOrderItemsToDTO(order);
+            paymentDTO.setItems(items);
+
+        }
+
         // Publicar evento de pagamento processado
         rabbitTemplate.convertAndSend(
                 "payment.exchange",
@@ -78,4 +88,16 @@ public class PaymentServiceImpl implements PaymentService {
     private boolean simulatePaymentProcessing() {
         return Math.random() < 0.8;
     }
+
+    private List<PaymentDTO.OrderItemDTO> mapOrderItemsToDTO(OrderDTO order) {
+        return order.getItems().stream()
+                .map(orderItem -> {
+                    PaymentDTO.OrderItemDTO itemDTO = new PaymentDTO.OrderItemDTO();
+                    itemDTO.setSku(orderItem.getSku());
+                    itemDTO.setQuantity(orderItem.getQuantity());
+                    return itemDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
 }

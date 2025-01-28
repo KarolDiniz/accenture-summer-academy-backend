@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public Queue paymentQueue() {
-        return new Queue("payment.queue", true);
+    public Queue paymentStockQueue() {
+        return new Queue("payment.stock.queue", true);
     }
 
     @Bean

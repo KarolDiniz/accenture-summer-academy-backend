@@ -24,7 +24,7 @@ public class PaymentConsumer {
     private final Logger log = LoggerFactory.getLogger(PaymentConsumer.class);
     private final OrderMapper orderMapper;
 
-    @RabbitListener(queues = "payment.queue")
+    @RabbitListener(queues = "payment.order.queue")
     @Transactional
     public void consumePayment(PaymentDTO payment) {
         try {

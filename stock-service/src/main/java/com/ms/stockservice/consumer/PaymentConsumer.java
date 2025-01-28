@@ -18,7 +18,7 @@ public class PaymentConsumer {
     private final StockService stockService;
     private final Logger log = LoggerFactory.getLogger(PaymentConsumer.class);
 
-    @RabbitListener(queues = "payment.queue")
+    @RabbitListener(queues = "payment.stock.queue")
     @Transactional
     public void consumePayment(PaymentDTO payment) {
 
