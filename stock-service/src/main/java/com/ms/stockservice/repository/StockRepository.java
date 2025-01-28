@@ -1,6 +1,6 @@
 package com.ms.stockservice.repository;
 
-import com.ms.stockservice.model.Stock;
+import com.ms.stockservice.model.entity.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import jakarta.persistence.LockModeType;

@@ -29,10 +29,10 @@ spring:
           include: beans
 
   datasource:
-    url: jdbc:mysql://localhost:3306/orderdb # Substitua pelo nome do seu banco de dados
+    url: jdbc:mysql://localhost:3306/orderdb
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root # Substitua pelo usuário do MySQL
-    password: '' # Substitua pela senha do MySQL
+    username: root
+    password: root
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect

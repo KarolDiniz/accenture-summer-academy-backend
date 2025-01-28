@@ -1,6 +1,6 @@
 package com.ms.stockservice.repository;
 
-import com.ms.stockservice.model.Product;
+import com.ms.stockservice.model.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

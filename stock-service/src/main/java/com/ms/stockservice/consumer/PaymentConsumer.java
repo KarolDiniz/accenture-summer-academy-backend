@@ -1,7 +1,7 @@
 package com.ms.stockservice.consumer;
 
-import com.ms.stockservice.model.PaymentDTO;
-import com.ms.stockservice.model.StockOperationDTO;
+import com.ms.stockservice.model.dto.PaymentDTO;
+import com.ms.stockservice.model.dto.StockOperationDTO;
 import com.ms.stockservice.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
