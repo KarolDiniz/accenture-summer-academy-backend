@@ -1,4 +1,0 @@
-package com.ms.shippingservice.model;
-
-public class ShippingOrder {
-}
