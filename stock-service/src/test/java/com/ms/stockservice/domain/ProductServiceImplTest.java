@@ -1,14 +1,15 @@
 package com.ms.stockservice.domain;
 
 
-import com.ms.stockservice.model.dto.ProductDTO;
-import com.ms.stockservice.model.entity.Product;
-import com.ms.stockservice.model.entity.Stock;
-import com.ms.stockservice.model.exception.ProductAlreadyExistsException;
-import com.ms.stockservice.model.exception.ProductNotFoundException;
-import com.ms.stockservice.repository.ProductRepository;
-import com.ms.stockservice.repository.StockRepository;
-import com.ms.stockservice.service.impl.ProductServiceImpl;
+import com.ms.stockservice.business.service.impl.ProductServiceImpl;
+import com.ms.stockservice.domain.model.dto.ProductDTO;
+import com.ms.stockservice.domain.model.entity.Product;
+import com.ms.stockservice.domain.model.entity.Stock;
+import com.ms.stockservice.domain.model.exception.ProductAlreadyExistsException;
+import com.ms.stockservice.domain.model.exception.ProductNotFoundException;
+import com.ms.stockservice.domain.repository.ProductRepository;
+import com.ms.stockservice.domain.repository.StockRepository;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

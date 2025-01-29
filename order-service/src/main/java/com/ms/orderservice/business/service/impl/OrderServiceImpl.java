@@ -11,8 +11,9 @@ import com.ms.orderservice.domain.repository.OrderRepository;
 import com.ms.orderservice.business.service.OrderMapper;
 import com.ms.orderservice.business.service.OrderService;
 import com.ms.orderservice.business.service.OrderStatusService;
-import com.ms.orderservice.business.service.RabbitMQService;
 import com.ms.orderservice.business.service.StockServiceClient;
+import com.ms.orderservice.business.service.producer.RabbitMQService;
+
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
