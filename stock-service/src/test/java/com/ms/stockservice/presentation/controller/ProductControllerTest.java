@@ -1,4 +1,4 @@
-package com.ms.stockservice.web;
+package com.ms.stockservice.presentation.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
