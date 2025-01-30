@@ -2,11 +2,12 @@ package com.ms.stockservice.web;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ms.stockservice.controller.ProductController;
-import com.ms.stockservice.model.exception.ProductAlreadyExistsException;
-import com.ms.stockservice.model.exception.ProductNotFoundException;
-import com.ms.stockservice.model.dto.ProductDTO;
-import com.ms.stockservice.service.ProductService;
+import com.ms.stockservice.business.service.ProductService;
+import com.ms.stockservice.domain.model.dto.ProductDTO;
+import com.ms.stockservice.domain.model.exception.ProductAlreadyExistsException;
+import com.ms.stockservice.domain.model.exception.ProductNotFoundException;
+import com.ms.stockservice.presentation.controller.ProductController;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
