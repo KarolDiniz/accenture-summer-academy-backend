@@ -1,33 +1,46 @@
 package com.ms.paymentservice.domain.model.entity;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class PaymentMethodTest {
 
     @Test
-    void shouldReturnCorrectProcessingStatus() {
-        assertTrue(PaymentMethod.CREDIT_CARD.canBeProcessed());
-        assertTrue(PaymentMethod.DEBIT_CARD.canBeProcessed());
-        assertTrue(PaymentMethod.PIX.canBeProcessed());
-        assertFalse(PaymentMethod.BOLETO.canBeProcessed());
+    void shouldReturnTrueForProcessableMethods() {
+        assertTrue(PaymentMethod.CREDIT_CARD.canBeProcessed(), "CREDIT_CARD deveria ser processável");
+        assertTrue(PaymentMethod.DEBIT_CARD.canBeProcessed(), "DEBIT_CARD deveria ser processável");
+        assertTrue(PaymentMethod.PIX.canBeProcessed(), "PIX deveria ser processável");
     }
 
     @Test
-    void shouldConvertStringToEnumSuccessfully() {
-        assertEquals(PaymentMethod.CREDIT_CARD, PaymentMethod.fromString("CREDIT_CARD"));
-        assertEquals(PaymentMethod.DEBIT_CARD, PaymentMethod.fromString("DEBIT_CARD"));
+    void shouldReturnFalseForNonProcessableMethods() {
+        assertFalse(PaymentMethod.BOLETO.canBeProcessed(), "BOLETO não deveria ser processável imediatamente");
+    }
+
+    @Test
+    void shouldConvertValidStringToEnum() {
+        assertEquals(PaymentMethod.CREDIT_CARD, PaymentMethod.fromString("credit_card"));
+        assertEquals(PaymentMethod.DEBIT_CARD, PaymentMethod.fromString("debit_card"));
+        assertEquals(PaymentMethod.PIX, PaymentMethod.fromString("pix"));
+        assertEquals(PaymentMethod.BOLETO, PaymentMethod.fromString("boleto"));
+    }
+
+    @Test
+    void shouldConvertValidStringWithDifferentCaseToEnum() {
+        assertEquals(PaymentMethod.CREDIT_CARD, PaymentMethod.fromString("Credit_Card"));
+        assertEquals(PaymentMethod.DEBIT_CARD, PaymentMethod.fromString("dEbIt_CaRd"));
         assertEquals(PaymentMethod.PIX, PaymentMethod.fromString("PIX"));
-        assertEquals(PaymentMethod.BOLETO, PaymentMethod.fromString("BOLETO"));
+        assertEquals(PaymentMethod.BOLETO, PaymentMethod.fromString("BoLeTo"));
     }
 
     @Test
     void shouldThrowExceptionForInvalidPaymentMethod() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            PaymentMethod.fromString("INVALID_METHOD");
-        });
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> 
+            PaymentMethod.fromString("invalid_method")
+        );
 
-        String expectedMessage = "Método de pagamento inválido: INVALID_METHOD";
-        assertTrue(exception.getMessage().contains(expectedMessage));
+        assertTrue(exception.getMessage().contains("Método de pagamento inválido"));
+        assertTrue(exception.getMessage().contains("CREDIT_CARD, DEBIT_CARD, PIX, BOLETO"));
     }
 }
