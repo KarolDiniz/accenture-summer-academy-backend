@@ -1,22 +1,25 @@
-# Accenture Store Microservice
+# 🛍️ Accenture Store Microservice
 
 Um sistema de e-commerce moderno construído com arquitetura de microsserviços utilizando Spring Boot, implementando os princípios da Clean Architecture dentro de um framework MVC.
 
-## Visão Geral da Arquitetura
+## 🚀 Visão Geral da Arquitetura
 
 O sistema consiste nos seguintes microsserviços:
-- **Eureka Server**: Descoberta e registro de serviços
-- **Order Service**: Gerenciamento e processamento de pedidos
-- **Stock Service**: Gerenciamento de estoque de produtos
-- **Payment Service**: Processamento de pagamentos
-- **Notification Service**: Gerenciamento de notificações do sistema
+- 🔹 **Eureka Server**: Descoberta e registro de serviços
+- 🛒 **Order Service**: Gerenciamento e processamento de pedidos
+- 📦 **Stock Service**: Gerenciamento de estoque de produtos
+- 💳 **Payment Service**: Processamento de pagamentos
+- 📢 **Notification Service**: Gerenciamento de notificações do sistema
 
-## Requisitos
+## 🛠️ Requisitos
 
-- Java JDK 17 ou superior
-- Maven 3.8.x ou superior
+- ☕ **Java JDK 17** ou superior
+- 🐘 **Maven 3.8.x** ou superior
+- 🐬 **MySQL 8** ou superior
+- 🐰 **RabbitMQ** para filas de mensagens
+- 🔄 **Docker** (opcional, para facilitar a execução dos serviços)
 
-## Instalação e Configuração
+## 📥 Instalação e Configuração
 
 1. Clone o repositório:
 ```bash
@@ -24,9 +27,9 @@ git clone https://github.com/KarolDiniz/accenture-summer-academy-backend.git
 ```
 Ou faça o download do arquivo ZIP e extraia-o em seu computador.
 
-## Configuração de Ambiente
+## 🛠️ Configuração de Ambiente
 
-Insira suas credenciais de acesso ao MySQL no arquivo `application.properties`. Exemplo de configuração:
+Edite o arquivo `application.properties` e insira suas credenciais do banco de dados MySQL:
 
 ```yml
 datasource:
@@ -36,58 +39,57 @@ datasource:
   password: suasenha
 ```
 
-## Inicialização dos Serviços
+## ▶️ Inicialização dos Serviços
 
 Inicie os serviços na seguinte ordem:
 
-1. Inicie o Eureka Server:
+1️⃣ Inicie o **Eureka Server**:
 ```bash
 cd eureka-server
 mvn spring-boot:run
 ```
 
-2. Em seguida, inicie os demais serviços (abra um novo terminal para cada um):
+2️⃣ Em seguida, inicie os demais serviços (abra um novo terminal para cada um):
 ```bash
-# Order Service
+# 🛒 Order Service
 cd order-service
 mvn spring-boot:run
 
-# Stock Service
+# 📦 Stock Service
 cd stock-service
 mvn spring-boot:run
 
-# Payment Service
+# 💳 Payment Service
 cd payment-service
 mvn spring-boot:run
 
-# Notification Service
+# 📢 Notification Service
 cd notification-service
 mvn spring-boot:run
 ```
 Ou execute-os diretamente na sua IDE.
 
-## Configuração de Portas Padrão
+## 🔌 Configuração de Portas Padrão
 
-- **Eureka Server**: 8761
-- **Order Service**: 8081
-- **Stock Service**: 8083
-- **Payment Service**: 8082
-- **Notification Service**: 8085
+- **Eureka Server**: `8761` ➡️ [http://localhost:8761](http://localhost:8761)
+- **Order Service**: `8081`
+- **Stock Service**: `8083`
+- **Payment Service**: `8082`
+- **Notification Service**: `8085`
 
-O painel do Eureka pode ser acessado em: [http://localhost:8761](http://localhost:8761)
+## 🐰 Acessando o RabbitMQ
 
-## Acessando o RabbitMQ
+Para acessar o painel do RabbitMQ:
 
-Para acessar o painel do RabbitMQ, siga os passos abaixo:
+🔗 [https://rabbitmq.tericcabrel.com/](https://rabbitmq.tericcabrel.com/)
 
-1. Acesse o link: [https://rabbitmq.tericcabrel.com/](https://rabbitmq.tericcabrel.com/)
-2. Insira as credenciais:
+🔑 Credenciais:
    - **Usuário**: `admin`
    - **Senha**: `MyStrong-P4ssw0rd$`
 
-## Endpoints Disponíveis
+## 📌 Endpoints Disponíveis
 
-### Order Service
+### 🛒 Order Service
 ```
 GET    /api/orders           - Obter todos os pedidos
 POST   /api/orders           - Criar um novo pedido
@@ -113,7 +115,7 @@ Exemplo de requisição para **POST /api/orders**:
 }
 ```
 
-### Product Service
+### 📦 Product Service
 ```
 GET    /api/products         - Obter todos os produtos
 POST   /api/products         - Criar um novo produto
@@ -133,7 +135,7 @@ Exemplo de requisição para **POST /api/products**:
 }
 ```
 
-## Documentação da API
+## 📄 Documentação da API
 
 Após iniciar cada serviço, acesse a documentação Swagger:
 - **Order Service**: [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html)
@@ -141,7 +143,7 @@ Após iniciar cada serviço, acesse a documentação Swagger:
 - **Payment Service**: [http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html)
 - **Notification Service**: [http://localhost:8085/swagger-ui.html](http://localhost:8085/swagger-ui.html)
 
-## Testes
+## 🧪 Testes
 
 Para executar os testes de todos os serviços:
 ```bash
@@ -154,15 +156,17 @@ cd nome-do-servico
 mvn test
 ```
 
-## Solução de Problemas
+## 🛠️ Solução de Problemas
 
-1. **Problemas de Registro de Serviços**
-   - Certifique-se de que o Eureka Server está em execução antes de iniciar outros serviços.
-   - Verifique se o serviço está registrado no painel do Eureka.
-   - Confirme a configuração do cliente Eureka no `application.properties`.
+1. **Problemas de Registro de Serviços** ⚠️
+   - Certifique-se de que o **Eureka Server** está em execução antes de iniciar outros serviços.
+   - Verifique se o serviço está registrado no painel do **Eureka**.
+   - Confirme a configuração do cliente **Eureka** no `application.properties`.
 
-2. **Conexão Recusada**
+2. **Conexão Recusada** 🚫
    - Verifique se o serviço de destino está em execução.
    - Confirme se a porta não está ocupada.
-   - Certifique-se de que as configurações do firewall permitem a conexão.
+   - Certifique-se de que as configurações do **firewall** permitem a conexão.
+
+🚀 **Agora você está pronto para rodar o Accenture Store Microservice!**
 
