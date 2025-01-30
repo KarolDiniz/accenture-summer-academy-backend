@@ -24,7 +24,6 @@ public class PaymentConsumer {
     public void consumePayment(PaymentDTO payment) {
 
         try {
-
             log.info("Received payment result for order {}: {}", payment.getOrderId(), payment);
 
             if (payment == null || payment.getOrderId() == null) {
