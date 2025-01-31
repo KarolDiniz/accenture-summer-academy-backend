@@ -2,6 +2,9 @@
 
 Um sistema de e-commerce moderno construído com arquitetura de microsserviços utilizando Spring Boot, implementando os princípios da Clean Architecture dentro de um framework MVC.
 
+## 📹 Vídeo Demonstrativo  
+https://youtu.be/SNfD07ShAuM
+
 ## 🚀 Visão Geral da Arquitetura
 
 O sistema consiste nos seguintes microsserviços:
