@@ -84,11 +84,11 @@ Ou execute-os diretamente na sua IDE.
 
 Para acessar o painel do RabbitMQ:
 
-🔗 [https://rabbitmq.tericcabrel.com/](https://rabbitmq.tericcabrel.com/)
+🔗 [jackal.rmq.cloudamqp.com](https://rabbitmq.tericcabrel.com/)
 
 🔑 Credenciais:
-   - **Usuário**: `admin`
-   - **Senha**: `MyStrong-P4ssw0rd$`
+   - **Usuário**: `mbmseyiz`
+   - **Senha**: `jKz6Xz1a3SFnjO5HMVURWMvPCRSeZOZz`
 
 ## 📌 Endpoints Disponíveis
 
