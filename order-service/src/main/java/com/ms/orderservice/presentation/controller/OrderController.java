@@ -65,4 +65,11 @@ public class OrderController {
         List<OrderStatusHistoryDTO> history = orderStatusService.getOrderStatusHistory(order);
         return ResponseEntity.ok(history);
     }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update an existing order")
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @RequestBody Order updatedOrder) {
+        OrderDTO updatedOrderDTO = orderService.updateOrder(id, updatedOrder);
+        return ResponseEntity.ok(updatedOrderDTO);
+    }
 }

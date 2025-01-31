@@ -112,6 +112,45 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    public OrderDTO updateOrder(Long id, Order updatedOrder) {
+        // Primeiro, verifica se a ordem existe
+        Order existingOrder = orderRepository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException(id));
+
+        // Verificar disponibilidade de estoque para os novos itens
+        List<StockCheckDTO> stockChecks = updatedOrder.getItems().stream()
+                .map(item -> new StockCheckDTO(item.getSku(), item.getQuantity(), false))
+                .toList();
+
+        log.info("Checking stock availability for updated order items: {}", stockChecks);
+
+        List<StockCheckDTO> stockResults = stockServiceClient.checkAvailability(stockChecks);
+
+        // Verificar se todos os itens estão disponíveis
+        List<String> unavailableSkus = stockResults.stream()
+                .filter(result -> !result.isAvailable())
+                .map(StockCheckDTO::getSku)
+                .toList();
+
+        if (!unavailableSkus.isEmpty()) {
+            log.warn("Insufficient stock for items: {}", unavailableSkus);
+            throw new InsufficientStockException(unavailableSkus);
+        }
+
+        // Atualizar campos permitidos
+        existingOrder.setCustomerEmail(updatedOrder.getCustomerEmail());
+
+        // Limpar itens existentes e adicionar novos
+        existingOrder.getItems().clear();
+        existingOrder.getItems().addAll(updatedOrder.getItems());
+
+        // Manter o status atual
+        Order savedOrder = orderRepository.save(existingOrder);
+        return orderMapper.toDTO(savedOrder);
+    }
+
+    @Override
+    @Transactional
     public void deleteOrder(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException(id));

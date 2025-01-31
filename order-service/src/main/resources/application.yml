@@ -6,10 +6,10 @@ spring:
     name: order-service
 
   rabbitmq:
-    host: rabbitmq.tericcabrel.com
+    host: jackal.rmq.cloudamqp.com
     port: 5671
-    username: admin
-    password: MyStrong-P4ssw0rd$
+    username: mbmseyiz
+    password: jKz6Xz1a3SFnjO5HMVURWMvPCRSeZOZz
     virtual-host: mbmseyiz
     ssl:
       enabled: true
@@ -29,15 +29,15 @@ spring:
           include: beans
 
   datasource:
-    url: jdbc:mysql://localhost:3306/orderdb
+    url: jdbc:mysql://localhost:3306/root
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: ''
+    password: 12345678
 
-  jpa:
+    jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: update # Use 'update' apenas para desenvolvimento
+      ddl-auto: update
     show-sql: true
 
 eureka:

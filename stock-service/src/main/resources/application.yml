@@ -6,10 +6,10 @@ spring:
     name: stock-service
 
   rabbitmq:
-    host: rabbitmq.tericcabrel.com
+    host: jackal.rmq.cloudamqp.com
     port: 5671
-    username: admin
-    password: MyStrong-P4ssw0rd$
+    username: mbmseyiz
+    password: jKz6Xz1a3SFnjO5HMVURWMvPCRSeZOZz
     virtual-host: mbmseyiz
     ssl:
       enabled: true
@@ -23,10 +23,10 @@ spring:
     publisher-returns: true
 
   datasource:
-    url: jdbc:mysql://localhost:3306/stockdb
+    url: jdbc:mysql://localhost:3306/root
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: ''
+    password: 12345678
 
   jpa:
     hibernate:
